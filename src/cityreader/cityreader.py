@@ -1,5 +1,17 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
+import csv
+
+
+class City:
+    def __init__(self, name, lat, lon):
+         self.name = name
+         self.lat = lat
+         self.lon = lon
+
+    def __str__(self):
+        return  f"City({self.name}, {self.lat}, {self.lon})"
+
 
 
 # We have a collection of US cities with population over 750,000 stored in the
@@ -18,10 +30,22 @@ cities = []
 
 def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
+
+  with open("cities.csv") as file:
+      # print(file.read())
+      # returns file as a dictionary item
   # For each city record, create a new City instance and add it to the 
   # `cities` list
+      reader = csv.DictReader(file)
+      for city in reader:
+        newCity = City(city["city"], float(city["lat"]), float(city["lng"]))
+        cities.append(newCity)
+        
     
-    return cities
+
+
+
+      return cities
 
 cityreader(cities)
 
@@ -59,13 +83,48 @@ for c in cities:
 # Salt Lake City: (40.7774,-111.9301)
 
 # TODO Get latitude and longitude values from the user
+# take in user inputs:
+point1 = input("Enter lat1, lon1: ").split(",")
+point2 = input("Enter lat2, lon2: ").split(",")
+lat1, lon1 = float(point1[0]), float(point1[1])
+lat2, lon2 = float(point2[0]), float(point2[1])
+
+
+
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
+     
   # within will hold the cities that fall within the specified region
-  within = []
+     within = []
 
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
   # the specified coordinates.
 
-  return within
+  # the data is coming in as a float
+     print(type(lat1))
+  # compares inputs with cities from the list's lat 
+     for city in cities:
+          if city.lat <= max(lat1, lat2) and city.lat >= min(lat1, lat2):
+               if city.lon <= max(lon1, lon2) and city.lon >= min(lon1, lon2):
+                    within.append(city)
+                    print(city)
+               else:
+                    print(f"{city.name} lon is not between {lon1} and {lon2}")
+          
+          else:
+               print(f"{city.name} lon is not between {lat1} and {lat2}")
+
+     
+        #  normalized = preprocessing.normalize(city)
+        #  print("Normalized Data =", normalized)
+        #  #  print(city.name)
+        #  within.append(city)
+
+     return within
+
+
+
+# Pass in the user values to the function:
+
+cityreader_stretch(lat1, lon1, lat2, lon2, cities)
